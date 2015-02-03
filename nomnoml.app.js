@@ -91,7 +91,8 @@ $(function (){
 			padding: (+d.padding) || 8,
 			spacing: (+d.spacing) || 40,
 			stroke: d.stroke || '#33322E',
-			zoom: +d.zoom || 1
+			zoom: +d.zoom || 1,
+            bossColor: d.bossColor || '#FF0000'
 		}
 	}
 
@@ -113,6 +114,10 @@ $(function (){
 		graphics.ctx.font = style+config.fontSize+'pt '+config.font+', Helvetica, sans-serif'
 	}
 
+    function setFontColor(fontColor){
+        graphics.ctx.fillStyle = fontColor
+    }
+
 	function parseAndRender(superSampling){
 		var ast = nomnoml.parse(textarea.value)
 		var config = getConfig(ast.directives)
@@ -124,17 +129,17 @@ $(function (){
 		var layout = nomnoml.layout(measurer, config, ast)
 		fitCanvasSize(layout, config.zoom, superSampling)
 		config.zoom *= superSampling
-		nomnoml.render(graphics, config, layout, setFont)
+		nomnoml.render(graphics, config, layout, setFont, setFontColor)
 	}
 
 	function sourceChanged(){
-		try {
+		//try {
 			var superSampling = window.devicePixelRatio || 1;
 			lineMarker.css('top', -30)
 			lineNumbers.css({background:'#eee8d5', color:'#D4CEBD'})
 			parseAndRender(superSampling)
 			storage.save(textarea.value)
-		} catch (e){
+		/*} catch (e){
 			var matches = e.message.match('line ([0-9]*)')
 			if (matches){
 				var lineHeight = parseInt(jqTextarea.css('line-height'), 10)
@@ -144,6 +149,6 @@ $(function (){
 				lineNumbers.css({background:'rgba(220,50,47,0.4)', color:'#657b83'})
 				throw e
 			}
-		}
+		}*/
 	}
 })

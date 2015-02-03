@@ -1,9 +1,10 @@
 var nomnoml = nomnoml || {}
 
-nomnoml.Classifier = function (type, name, compartments){
+nomnoml.Classifier = function (type, name, id, compartments){
 	return {
         type: type,
         name: name,
+        id: id,
         compartments: compartments
     }
 }

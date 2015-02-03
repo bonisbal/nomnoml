@@ -71,7 +71,8 @@ nomnoml.transformParseIntoSyntaxTree = function (entity){
 			return transformCompartment(entity)
 		if (entity.parts){
 			var compartments = _.map(entity.parts, transformCompartment)
-			return nomnoml.Classifier(entity.type, entity.id, compartments)
+            //alert(entity.id);
+			return nomnoml.Classifier(entity.type, entity.name, entity.id, compartments)
 		}
 		return undefined
 	}

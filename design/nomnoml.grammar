@@ -42,11 +42,24 @@ class
   : '[' parts ']'          {
            var type = 'CLASS';
            var id = $2[0][0];
+           var name = $2[0][0];
+           var idMatch = $2[0][0].match('\\(([a-zA-Z0-9]*)\\)(.*)');
+           if (idMatch) {
+                id = idMatch[1].trim();
+                name = idMatch[2].trim();
+           }
            var typeMatch = $2[0][0].match('<([a-z]*)>(.*)');
            if (typeMatch) {
                type = typeMatch[1].toUpperCase();
                id = typeMatch[2].trim();
+               name = typeMatch[2].trim();
+           }
+           var typeMatch = $2[0][0].match('<([a-z]*)>\\(([a-zA-Z0-9]*)\\)(.*)');
+           if (typeMatch) {
+               type = typeMatch[1].toUpperCase();
+               id = typeMatch[2].trim();
+               name = typeMatch[3].trim();
            }
            $2[0][0] = id;
-           $$ = {type:type, id:id, parts:$2};
+           $$ = {type:type, name:name, id:id, parts:$2};
   };

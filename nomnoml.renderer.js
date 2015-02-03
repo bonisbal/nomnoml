@@ -1,6 +1,6 @@
 var nomnoml = nomnoml || {}
 
-nomnoml.render = function (graphics, config, compartment, setFont){
+nomnoml.render = function (graphics, config, compartment, setFont, setFontColor){
 
 	var padding = config.padding
 	var g = graphics
@@ -8,7 +8,7 @@ nomnoml.render = function (graphics, config, compartment, setFont){
 	function renderCompartment(compartment, style, level){
 		g.ctx.save()
 		g.ctx.translate(padding, padding)
-		g.ctx.fillStyle = config.stroke
+		g.ctx.fillStyle = style.fillColor ? style.fillColor : config.stroke
 		_.each(compartment.lines, function (text, i){
 			g.ctx.textAlign = style.center ? 'center' : 'left'
 			var x = style.center ? compartment.width/2 - padding : 0
@@ -46,6 +46,7 @@ nomnoml.render = function (graphics, config, compartment, setFont){
 			SENDER: {},
 			RECEIVER: {},
 			HIDDEN: { empty: true },
+            BOSS: { bold: true, center: true, fillColor: 'white' }
 		}[node.type] || {}
 	}
 
@@ -71,7 +72,11 @@ nomnoml.render = function (graphics, config, compartment, setFont){
 		} else if (node.type === 'START') {
 			g.ctx.fillStyle = config.stroke
 			g.circle(x+node.width/2, y+node.height/2, node.height/2.5).fill()
-		} else if (node.type === 'END') {
+		} else if (node.type === 'BOSS') {
+            g.ctx.fillStyle = config.bossColor
+            g.ctx.fillRect(x, y, node.width, node.height)
+            g.ctx.strokeRect(x, y, node.width, node.height)
+        } else if (node.type === 'END') {
 			g.circle(x+node.width/2, y+node.height/2, node.height/3).fill().stroke()
 			g.ctx.fillStyle = config.stroke
 			g.circle(x+node.width/2, y+node.height/2, node.height/3-padding/2).fill()
@@ -174,7 +179,7 @@ nomnoml.render = function (graphics, config, compartment, setFont){
 			g.ctx.lineTo(_.last(p).x, _.last(p).y)
 	        g.ctx.stroke()
 		}
-		else 
+		else
 			g.path(p).stroke()
 	}
 
@@ -207,7 +212,7 @@ nomnoml.render = function (graphics, config, compartment, setFont){
 			else
 				strokePath(path)
 		}
-
+        /*
 		function drawArrowEnd(id, path, end){
 			if (id === '>' || id === '<')
 				drawArrow(path, filled, end)
@@ -221,7 +226,7 @@ nomnoml.render = function (graphics, config, compartment, setFont){
 
 		var tokens = r.assoc.split('-')
 		drawArrowEnd(_.last(tokens), path, end)
-		drawArrowEnd(_.first(tokens), path.reverse(), start)
+		drawArrowEnd(_.first(tokens), path.reverse(), start)*/
 	}
 
 	function rectIntersection(p1, p2, rect){
