@@ -5,7 +5,7 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 	var padding = config.padding
 	var g = graphics
 
-	function renderCompartment(compartment, style, level){
+	function renderCompartment(compartment, style, level, node){
 		g.ctx.save()
 		g.ctx.translate(padding, padding)
 		g.ctx.fillStyle = style.fillColor ? style.fillColor : config.stroke
@@ -13,6 +13,9 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			g.ctx.textAlign = style.center ? 'center' : 'left'
 			var x = style.center ? compartment.width/2 - padding : 0
 			var y = (0.5+(i+.5)*config.leading)*config.fontSize
+            if ( node && node.type == 'RN' )
+                x += node.width/2+20
+                
 			g.ctx.fillText(text, x, y)
 			if (style.underline){
 				var w = g.ctx.measureText(text).width
@@ -76,6 +79,14 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
             g.ctx.fillStyle = config.bossColor
             g.ctx.fillRect(x, y, node.width, node.height)
             g.ctx.strokeRect(x, y, node.width, node.height)
+        } else if (node.type === 'RN' ) {
+            node.x = x+node.width/2+20
+			g.path([
+				{x: x+node.width/2, y: y+node.height/2},
+				{x: node.x, y: y+node.height/2}
+			]).stroke()
+            g.ctx.fillRect(node.x, y, node.width, node.height)
+            g.ctx.strokeRect(node.x, y, node.width, node.height)
         } else if (node.type === 'END') {
 			g.circle(x+node.width/2, y+node.height/2, node.height/3).fill().stroke()
 			g.ctx.fillStyle = config.stroke
@@ -148,7 +159,7 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			g.ctx.save()
 			g.ctx.translate(x, yDivider)
 			setFont(config, s.bold ? 'bold' : 'normal', s.italic)
-			renderCompartment(part, s, level+1)
+			renderCompartment(part, s, level+1, node)
 			g.ctx.restore()
 			if (i+1 == node.compartments.length) return
 			yDivider += part.height
@@ -170,13 +181,6 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			var radius = config.spacing * config.bendSize
 	        g.ctx.beginPath()
 	        g.ctx.moveTo(p[0].x, p[0].y)
-            
-            // for (var i = 1; i < p.length-1; i++){
-            //     var vec = diff(p[i], p[i-1])
-            //     var bendStart = add(p[i-1], mult(normalize(vec), mag(vec)-radius))
-            //     g.ctx.lineTo(bendStart.x, bendStart.y)
-            //     g.ctx.arcTo(p[i].x, p[i].y, p[i+1].x, p[i+1].y, radius)
-            // }
             g.ctx.lineTo(p[0].x, p[p.length-2].y)
             g.ctx.lineTo(_.last(p).x, p[p.length-2].y )
 			g.ctx.lineTo(_.last(p).x, _.last(p).y)
@@ -192,8 +196,8 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 		var startNode = _.findWhere(compartment.nodes, {name:r.start})
 		var endNode = _.findWhere(compartment.nodes, {name:r.end})
 
-        var start = _.first(r.path)
-		var end = rectIntersection(r.path[r.path.length-2], _.last(r.path), endNode)
+        var start = _.first(r.path),
+            end = _.last(r.path);
 
 		var path = _.flatten([start, _.tail(_.initial(r.path)), end])
 		var fontSize = config.fontSize
@@ -277,6 +281,6 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 	g.ctx.strokeStyle = config.stroke
 	g.ctx.scale(config.zoom, config.zoom)
 	snapToPixels()
-	renderCompartment(compartment, {}, 0)
+	renderCompartment(compartment, {}, 0, null)
 	g.ctx.restore()
 }
