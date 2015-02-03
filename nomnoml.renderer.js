@@ -170,12 +170,15 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			var radius = config.spacing * config.bendSize
 	        g.ctx.beginPath()
 	        g.ctx.moveTo(p[0].x, p[0].y)
-			for (var i = 1; i < p.length-1; i++){
-				var vec = diff(p[i], p[i-1])
-				var bendStart = add(p[i-1], mult(normalize(vec), mag(vec)-radius))
-				g.ctx.lineTo(bendStart.x, bendStart.y)
-				g.ctx.arcTo(p[i].x, p[i].y, p[i+1].x, p[i+1].y, radius)
-			}
+            
+            // for (var i = 1; i < p.length-1; i++){
+            //     var vec = diff(p[i], p[i-1])
+            //     var bendStart = add(p[i-1], mult(normalize(vec), mag(vec)-radius))
+            //     g.ctx.lineTo(bendStart.x, bendStart.y)
+            //     g.ctx.arcTo(p[i].x, p[i].y, p[i+1].x, p[i+1].y, radius)
+            // }
+            g.ctx.lineTo(p[0].x, p[p.length-2].y)
+            g.ctx.lineTo(_.last(p).x, p[p.length-2].y )
 			g.ctx.lineTo(_.last(p).x, _.last(p).y)
 	        g.ctx.stroke()
 		}
@@ -189,7 +192,7 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 		var startNode = _.findWhere(compartment.nodes, {name:r.start})
 		var endNode = _.findWhere(compartment.nodes, {name:r.end})
 
-		var start = rectIntersection(r.path[1], _.first(r.path), startNode)
+        var start = _.first(r.path)
 		var end = rectIntersection(r.path[r.path.length-2], _.last(r.path), endNode)
 
 		var path = _.flatten([start, _.tail(_.initial(r.path)), end])
@@ -212,21 +215,21 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			else
 				strokePath(path)
 		}
-        /*
-		function drawArrowEnd(id, path, end){
-			if (id === '>' || id === '<')
-				drawArrow(path, filled, end)
-			else if (id === ':>' || id === '<:')
-				drawArrow(path, empty, end)
-			else if (id === '+')
-				drawArrow(path, filled, end, diamond)
-			else if (id === 'o')
-				drawArrow(path, empty, end, diamond)
-		}
 
-		var tokens = r.assoc.split('-')
-		drawArrowEnd(_.last(tokens), path, end)
-		drawArrowEnd(_.first(tokens), path.reverse(), start)*/
+        function drawArrowEnd(id, path, end){
+            if (id === '>' || id === '<')
+                drawArrow(path, filled, end)
+            else if (id === ':>' || id === '<:')
+                drawArrow(path, empty, end)
+            else if (id === '+')
+                drawArrow(path, filled, end, diamond)
+            else if (id === 'o')
+                drawArrow(path, empty, end, diamond)
+        }
+
+        var tokens = r.assoc.split('-')
+        drawArrowEnd(_.last(tokens), path, end)
+        drawArrowEnd(_.first(tokens), path.reverse(), start)
 	}
 
 	function rectIntersection(p1, p2, rect){
