@@ -8,11 +8,12 @@ nomnoml.Classifier = function (type, name, id, compartments){
         compartments: compartments
     }
 }
-nomnoml.Compartment = function (lines, nodes, relations){
+nomnoml.Compartment = function (lines, nodes, relations, name){
 	return {
         lines: lines,
         nodes: nodes,
-        relations: relations
+        relations: relations,
+        name: name
     }
 }
 
@@ -35,6 +36,7 @@ nomnoml.layout = function (measurer, config, ast){
 		}
 	}
 	function layoutCompartment(c, compartmentIndex){
+        
 		var textSize = measureLines(c.lines, compartmentIndex ? 'normal' : 'bold')        
 		c.width = textSize.width
 		c.height = textSize.height
@@ -47,7 +49,7 @@ nomnoml.layout = function (measurer, config, ast){
 		var g = new dagre.Digraph()
 		_.each(c.nodes, function (e){            
 			g.addNode(e.id, {
-                width: (e.type == 'RN') ? e.width*2 : e.width, 
+                width: (e.type == 'RN') ? e.width*2 + 20 : e.width, 
                 height: e.height 
             })
 		})
@@ -76,7 +78,11 @@ nomnoml.layout = function (measurer, config, ast){
 	}
 	function layoutClassifier(clas){
 		_.each(clas.compartments, layoutCompartment)
-		clas.width = _.max(_.pluck(clas.compartments, 'width'))
+        
+        var exp_width = _.max(_.pluck(clas.compartments, 'width')),
+            m_width = measureLines([clas.name]).width
+
+        clas.width = Math.max(exp_width,m_width)
 		clas.height = _.sum(clas.compartments, 'height')
 		if (clas.type == 'HIDDEN'){
 			clas.width = 0

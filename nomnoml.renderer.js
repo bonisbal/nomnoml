@@ -18,7 +18,7 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 
 			g.ctx.fillText(node.name, x, y)
 			if (style.underline){
-				var w = g.ctx.measureText(text).width
+				var w = g.ctx.measureText(node.name).width
 				y += Math.round(config.fontSize * 0.1)+0.5
 				g.ctx.lineWidth = Math.round(config.fontSize/10)
 				g.path([{x:x-w/2, y:y}, {x:x+w/2, y:y}]).stroke()
