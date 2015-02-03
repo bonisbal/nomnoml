@@ -35,7 +35,7 @@ nomnoml.layout = function (measurer, config, ast){
 		}
 	}
 	function layoutCompartment(c, compartmentIndex){
-		var textSize = measureLines(c.lines, compartmentIndex ? 'normal' : 'bold')
+		var textSize = measureLines(c.lines, compartmentIndex ? 'normal' : 'bold')        
 		c.width = textSize.width
 		c.height = textSize.height
 
@@ -45,8 +45,11 @@ nomnoml.layout = function (measurer, config, ast){
 		_.each(c.nodes, layoutClassifier)
 
 		var g = new dagre.Digraph()
-		_.each(c.nodes, function (e){
-			g.addNode(e.id, { width: e.width, height: e.height })
+		_.each(c.nodes, function (e){            
+			g.addNode(e.id, {
+                width: (e.type == 'RN') ? e.width*2 : e.width, 
+                height: e.height 
+            })
 		})
 		_.each(c.relations, function (r){
 			g.addEdge(r.id, r.start, r.end)
@@ -56,7 +59,7 @@ nomnoml.layout = function (measurer, config, ast){
 		var rels = _.indexBy(c.relations, 'id')
 		var nodes = _.indexBy(c.nodes, 'id')
 		function toPoint(o){ return {x:o.x, y:o.y} }
-		dLayout.eachNode(function(u, value) {
+		dLayout.eachNode(function(u, value) {                
 			nodes[u].x = value.x
 			nodes[u].y = value.y
 		})
