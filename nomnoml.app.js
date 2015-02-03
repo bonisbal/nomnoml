@@ -87,7 +87,7 @@ $(function (){
 			font: d.font || 'Calibri',
 			fontSize: (+d.fontSize) || 12,
 			leading: (+d.leading) || 1.25,
-			lineWidth: (+d.lineWidth) || 3,
+			lineWidth: (+d.lineWidth) || 2,
 			padding: (+d.padding) || 8,
 			spacing: (+d.spacing) || 40,
 			stroke: d.stroke || '#33322E',
