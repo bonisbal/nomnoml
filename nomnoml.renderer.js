@@ -9,22 +9,32 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 		g.ctx.save()
 		g.ctx.translate(padding, padding)
 		g.ctx.fillStyle = style.fillColor ? style.fillColor : config.stroke
-		_.each(compartment.lines, function (text, i){
-			g.ctx.textAlign = style.center ? 'center' : 'left'
-			var x = style.center ? compartment.width/2 - padding : 0
-			var y = (0.5+(i+.5)*config.leading)*config.fontSize
+        g.ctx.textAlign = style.center ? 'center' : 'left'
+        
+        _.each(compartment.lines, function (text, i){            
+            var x = style.center ? compartment.width/2 - padding : 0
+            var y = (0.5+(i+.5)*config.leading)*config.fontSize
             if ( node && node.type == 'RN' )
                 x += node.width/2+20
+            
+            if ( node && node.type == 'BOSS' ) {
+                g.ctx.fillStyle = 'white'
+            }
 
-			g.ctx.fillText(node.name, x, y)
-			if (style.underline){
-				var w = g.ctx.measureText(node.name).width
-				y += Math.round(config.fontSize * 0.1)+0.5
-				g.ctx.lineWidth = Math.round(config.fontSize/10)
-				g.path([{x:x-w/2, y:y}, {x:x+w/2, y:y}]).stroke()
-				g.ctx.lineWidth = config.lineWidth
-			}
-		})
+            if ( node && node.compartments.indexOf(compartment) == 0 ) {
+                g.ctx.fillText(node.name, x, y)
+            } else {
+                g.ctx.textAlign = 'left'
+                g.ctx.fillText(text,x,y)
+            }
+            if (style.underline){
+                var w = g.ctx.measureText(node.name).width
+                y += Math.round(config.fontSize * 0.1)+0.5
+                g.ctx.lineWidth = Math.round(config.fontSize/10)
+                g.path([{x:x-w/2, y:y}, {x:x+w/2, y:y}]).stroke()
+                g.ctx.lineWidth = config.lineWidth
+            }
+        })
 		g.ctx.translate(config.gutter, config.gutter)
 		_.each(compartment.relations, function (r){ renderRelation(r, compartment) })
 		_.each(compartment.nodes, function (n){ renderNode(n, level) })
@@ -34,7 +44,7 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 	function textStyle(node, line){
 		if (line > 0) return {}
 		return {
-			CLASS: { bold: true, center: true },
+			CLASS: { bold: true, center: false },
 			INSTANCE: { center: true, underline: true },
 			FRAME: { center: false, frameHeader: true },
 			ABSTRACT: { italic: true, center: true},
@@ -49,8 +59,8 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			SENDER: {},
 			RECEIVER: {},
 			HIDDEN: { empty: true },
-            BOSS: { bold: true, center: true, fillColor: 'white' },
-            RN: {bold: true, center: true}
+            BOSS: { bold: true, center: false, fillColor: 'white' },
+            RN: {bold: true, center: false}
 		}[node.type] || {}
 	}
 
@@ -172,8 +182,7 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 					{x:x+w, y:yDivider-part.height/2},
 					{x:x+w, y:yDivider-part.height}
 			    ]).stroke()
-			} else
-				g.path([{x:x, y:yDivider}, {x:x+node.width, y:yDivider}]).stroke()
+			}
 		})
 	}
 

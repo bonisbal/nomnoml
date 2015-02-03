@@ -80,7 +80,7 @@ nomnoml.layout = function (measurer, config, ast){
 		_.each(clas.compartments, layoutCompartment)
         
         var exp_width = _.max(_.pluck(clas.compartments, 'width')),
-            m_width = measureLines([clas.name]).width
+            m_width = measureLines([clas.name]).width + 8*2
 
         clas.width = Math.max(exp_width,m_width)
 		clas.height = _.sum(clas.compartments, 'height')
