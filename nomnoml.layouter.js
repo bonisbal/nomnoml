@@ -46,7 +46,7 @@ nomnoml.layout = function (measurer, config, ast){
 
 		var g = new dagre.Digraph()
 		_.each(c.nodes, function (e){
-			g.addNode(e.name, { width: e.width, height: e.height })
+			g.addNode(e.id, { width: e.width, height: e.height })
 		})
 		_.each(c.relations, function (r){
 			g.addEdge(r.id, r.start, r.end)
@@ -54,7 +54,7 @@ nomnoml.layout = function (measurer, config, ast){
 		var dLayout = runDagre(g)
 
 		var rels = _.indexBy(c.relations, 'id')
-		var nodes = _.indexBy(c.nodes, 'name')
+		var nodes = _.indexBy(c.nodes, 'id')
 		function toPoint(o){ return {x:o.x, y:o.y} }
 		dLayout.eachNode(function(u, value) {
 			nodes[u].x = value.x

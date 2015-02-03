@@ -13,6 +13,7 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			g.ctx.textAlign = style.center ? 'center' : 'left'
 			var x = style.center ? compartment.width/2 - padding : 0
 			var y = (0.5+(i+.5)*config.leading)*config.fontSize
+            alert(text)
 			g.ctx.fillText(text, x, y)
 			if (style.underline){
 				var w = g.ctx.measureText(text).width
@@ -186,8 +187,8 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 	var empty = false, filled = true, diamond = true
 
 	function renderRelation(r, compartment){
-		var startNode = _.findWhere(compartment.nodes, {name:r.start})
-		var endNode = _.findWhere(compartment.nodes, {name:r.end})
+		var startNode = _.findWhere(compartment.nodes, {id:r.start})
+		var endNode = _.findWhere(compartment.nodes, {id:r.end})
 
 		var start = rectIntersection(r.path[1], _.first(r.path), startNode)
 		var end = rectIntersection(r.path[r.path.length-2], _.last(r.path), endNode)

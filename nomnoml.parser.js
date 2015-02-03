@@ -57,7 +57,7 @@ nomnoml.transformParseIntoSyntaxTree = function (entity){
             }
 		})
 		var allClassifiers = _.map(rawClassifiers, transformItem)
-		var noDuplicates = _.map(_.groupBy(allClassifiers, 'name'), function (cList){
+		var noDuplicates = _.map(_.groupBy(allClassifiers, 'id'), function (cList){
 			return _.max(cList, function (c){ return c.compartments.length })
 		})
 
@@ -71,7 +71,6 @@ nomnoml.transformParseIntoSyntaxTree = function (entity){
 			return transformCompartment(entity)
 		if (entity.parts){
 			var compartments = _.map(entity.parts, transformCompartment)
-            //alert(entity.id);
 			return nomnoml.Classifier(entity.type, entity.name, entity.id, compartments)
 		}
 		return undefined
