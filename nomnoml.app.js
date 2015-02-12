@@ -92,7 +92,8 @@ $(function (){
 			spacing: (+d.spacing) || 40,
 			stroke: d.stroke || '#33322E',
 			zoom: +d.zoom || 1,
-            bossColor: d.bossColor || '#FF0000'
+            bossColor: d.bossColor || '#a50e1c',
+            divColor: d.divColor || '#d3d5d6'
 		}
 	}
 

@@ -60,7 +60,8 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			RECEIVER: {},
 			HIDDEN: { empty: true },
             BOSS: { bold: true, center: false, fillColor: 'white' },
-            RN: {bold: true, center: false}
+            RN: {bold: true, center: false},
+            DIV: {bold: true }
 		}[node.type] || {}
 	}
 
@@ -88,6 +89,10 @@ nomnoml.render = function (graphics, config, compartment, setFont, setFontColor)
 			g.circle(x+node.width/2, y+node.height/2, node.height/2.5).fill()
 		} else if (node.type === 'BOSS') {
             g.ctx.fillStyle = config.bossColor
+            g.ctx.fillRect(x, y, node.width, node.height)
+            g.ctx.strokeRect(x, y, node.width, node.height)
+        } else if (node.type === 'DIV') {
+            g.ctx.fillStyle = config.divColor
             g.ctx.fillRect(x, y, node.width, node.height)
             g.ctx.strokeRect(x, y, node.width, node.height)
         } else if (node.type === 'RN' ) {

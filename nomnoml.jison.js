@@ -110,7 +110,7 @@ var parser = (function(){
                     var type = 'CLASS';
                     var id = $$[$0-1][0][0];
                     var name = $$[$0-1][0][0];
-                    var idMatch = $$[$0-1][0][0].match('\\(([a-zA-Z0-9]*)\\)(.*)');
+                    var idMatch = $$[$0-1][0][0].match('\\(([a-zA-Z0-9 ]*)\\)(.*)');
                     if (idMatch) {
                         id = idMatch[1].trim();
                         name = idMatch[2].trim();
@@ -121,7 +121,7 @@ var parser = (function(){
                         id = typeMatch[2].trim();
                         name = typeMatch[2].trim();
                     }
-                    var typeMatch = $$[$0-1][0][0].match('<([a-z]*)>\\(([a-zA-Z0-9]*)\\)(.*)');
+                    var typeMatch = $$[$0-1][0][0].match('<([a-z]*)>\\(([a-zA-Z0-9 ]*)\\)(.*)');
                     if (typeMatch) {
                         type = typeMatch[1].toUpperCase();
                         id = typeMatch[2].trim();
